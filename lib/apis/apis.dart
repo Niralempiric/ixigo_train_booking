@@ -14,6 +14,7 @@ class ApiClient {
   static const String trainroutelistBASEURL = 'https://rails.makemytrip.com/pwa/mobile/searchWithAvailAndRecommendation/';
   static const String trainscheduleBASEURL = 'https://mapi.makemytrip.com/api/rails/train/schedule/v1';
   static const String trainschedulelistBASEURL = 'https://travel.paytm.com/api/trains-search/v1/train/';
+  static const String searchStationBASEURL = 'https://travel.paytm.com/api/trains/v3/station/';
 
 
 
@@ -162,6 +163,18 @@ class ApiClient {
   Future<dynamic> trainbookAPI(String endpoint) async {
     final response =
     await http.get(Uri.parse('$trainbookBASEURL$endpoint'));
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception(
+          'Failed to load data. Status code: ${response.statusCode}');
+    }
+  }
+
+  Future<dynamic> searchStationAPI(String endpoint) async {
+    final response =
+    await http.get(Uri.parse('$searchStationBASEURL$endpoint'));
 
     if (response.statusCode == 200) {
       return json.decode(response.body);

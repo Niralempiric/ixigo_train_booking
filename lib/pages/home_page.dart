@@ -146,24 +146,18 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
+                                  const SizedBox(width: 5),
                                   Container(
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                            width: 1, color: Colors.red)),
+                                        border: Border.all(width: 1, color: Colors.red)),
                                     child: const Padding(
                                       padding: EdgeInsets.all(5.0),
                                       child: Column(
                                         children: [
                                           Text(
                                             "Day After",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 12,
-                                                color: Colors.red),
+                                            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Colors.red),
                                           ),
                                         ],
                                       ),
