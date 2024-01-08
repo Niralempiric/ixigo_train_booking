@@ -2,13 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:ixigo_train_booking_dev_hardik/pages/findCity.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  DateTime? selectedDate;
+
+  var res1 = {'code': 'NDLS', 'name': 'New Delhi'};
+  var res2 = {'code': 'PNBE', 'name': 'Patana Jn'};
+
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 250),
+      vsync: this,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -25,9 +42,7 @@ class _HomePageState extends State<HomePage> {
                   width: 50,
                 ),
                 const Text('Trains'),
-                const Divider(
-                  color: Colors.blue,
-                ),
+                const Divider(color: Colors.blue),
                 Card(
                   child: Container(
                     decoration: BoxDecoration(
@@ -39,68 +54,115 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.all(15),
                       child: Column(
                         children: [
-                          Row(
+                          Stack(
+                            alignment: Alignment.centerRight,
                             children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.yellow,
-                                ),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "GHY",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w700),
+                              Column(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      res1 = await Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const FindCityWidget()));
+                                      setState(() {});
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: Colors.yellow,
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Text(
+                                              "${res1['code']}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 10),
+                                          child: Text(
+                                            "${res1['name']}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 15),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Text(
-                                  "Guwahati",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 15),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 5),
-                          const Divider(color: Colors.grey),
-                          const SizedBox(height: 5),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const FindCityWidget()));
-                            },
-                            child: Row(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.yellow,
+                                  const SizedBox(height: 5),
+                                  const Divider(color: Colors.grey),
+                                  const SizedBox(height: 5),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      res2 = await Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const FindCityWidget()));
+                                      setState(() {});
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: Colors.yellow,
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Text(
+                                              res2['code']!,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 10),
+                                          child: Text(
+                                            res2['name']!,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 15),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "HWH",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 20),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    _controller.forward(
+                                        from:
+                                            0.0); // Start the rotation animation
+                                    setState(() {
+                                      var res = res1;
+                                      res1 = res2;
+                                      res2 = res;
+                                    });
+                                  },
+                                  child: RotationTransition(
+                                    turns: Tween(begin: 0.0, end: 0.5)
+                                        .animate(_controller),
+                                    child: const Icon(
+                                      Icons.swap_vert_circle_outlined,
+                                      color: Colors.blue,
+                                      size: 40,
                                     ),
                                   ),
                                 ),
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 10),
-                                  child: Text(
-                                    "Howrah Jn",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 15),
-                                  ),
-                                ),
-                              ],
-                            ),
+                              )
+                            ],
                           ),
                           const SizedBox(height: 5),
                           Divider(color: Colors.grey.shade400),
@@ -108,21 +170,51 @@ class _HomePageState extends State<HomePage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Row(
-                                children: [
-                                  Icon(Icons.date_range),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.only(left: 10, right: 10),
-                                    child: Text(
-                                      "Choose Date",
-                                      style: TextStyle(
+                              InkWell(
+                                onTap: () async {
+                                  DateTime? pickedDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: selectedDate ?? DateTime.now(),
+                                    firstDate: DateTime.now(),
+                                    lastDate: DateTime(DateTime.now().year + 1),
+                                  );
+                                  if (pickedDate != null &&
+                                      pickedDate != selectedDate) {
+                                    setState(() {
+                                      selectedDate = pickedDate;
+                                    });
+                                  }
+                                },
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.date_range),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(left: 10, right: 10),
+                                      child: Text(
+                                        selectedDate != null
+                                            ? "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}"
+                                            : "Choose Date",
+                                        style: TextStyle(
                                           fontWeight: FontWeight.w400,
-                                          fontSize: 15),
+                                          fontSize: 15,
+                                          color: selectedDate != null
+                                              ? Colors.black
+                                              : Colors.grey,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  Icon(Icons.close, size: 15),
-                                ],
+                                    if (selectedDate != null)
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedDate = null;
+                                          });
+                                        },
+                                        child: Icon(Icons.close, size: 15),
+                                      ),
+                                  ],
+                                ),
                               ),
                               Row(
                                 children: [
@@ -131,18 +223,26 @@ class _HomePageState extends State<HomePage> {
                                         borderRadius: BorderRadius.circular(10),
                                         border: Border.all(
                                             width: 1, color: Colors.blue)),
-                                    child: const Padding(
-                                      padding: EdgeInsets.all(5.0),
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            "Tomorrow",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 12,
-                                                color: Colors.blue),
-                                          ),
-                                        ],
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          selectedDate = DateTime.now()
+                                              .add(Duration(days: 1));
+                                        });
+                                      },
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(5.0),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              "Tomorrow",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 12,
+                                                  color: Colors.blue),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -150,16 +250,28 @@ class _HomePageState extends State<HomePage> {
                                   Container(
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(width: 1, color: Colors.red)),
-                                    child: const Padding(
-                                      padding: EdgeInsets.all(5.0),
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            "Day After",
-                                            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Colors.red),
-                                          ),
-                                        ],
+                                        border: Border.all(
+                                            width: 1, color: Colors.red)),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          selectedDate = DateTime.now()
+                                              .add(Duration(days: 2));
+                                        });
+                                      },
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(5.0),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              "Day After",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 12,
+                                                  color: Colors.red),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -177,11 +289,9 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Checkbox(
-                                        value: true, onChanged: (val) {}),
+                                    Checkbox(value: true, onChanged: (val) {}),
                                     const Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
@@ -210,11 +320,17 @@ class _HomePageState extends State<HomePage> {
                                 Container(
                                   width: double.infinity,
                                   child: ElevatedButton(
-                                      onPressed: () {},
-                                      style: ButtonStyle(
-                                          elevation:
-                                              MaterialStateProperty.all(0)),
-                                      child: const Text("Search Trains >")),
+                                    onPressed: () async {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const FindCityWidget()));
+                                    },
+                                    style: ButtonStyle(
+                                      elevation: MaterialStateProperty.all(0),
+                                    ),
+                                    child: const Text("Search Trains >"),
+                                  ),
                                 ),
                               ],
                             ),

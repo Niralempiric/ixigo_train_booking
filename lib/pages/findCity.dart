@@ -38,7 +38,7 @@ class _FindCityWidgetState extends State<FindCityWidget> {
                           onTap: () {
                             Navigator.of(context).pop();
                           },
-                          child: Icon(Icons.arrow_back),
+                          child: const Icon(Icons.arrow_back),
                         ),
                         border: InputBorder.none,
                         suffixIcon: Icon(
@@ -57,48 +57,58 @@ class _FindCityWidgetState extends State<FindCityWidget> {
                       ApiClient().searchStationAPI(textEditingController.text),
                   builder: (BuildContext context, AsyncSnapshot snapshots) {
                     if (snapshots.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
+                      return const Center(child: CircularProgressIndicator());
                     }
 
                     if (snapshots.data != null) {
-
-                      List<dynamic> _data = snapshots.data['body'][0]['stations'];
-                      print(
-                          "snapshots>>> ${_data}");
+                      List<dynamic> data =
+                          snapshots.data['body'][0]['stations'];
+                      print("snapshots>>> $data");
                       return ListView.builder(
-                        itemCount: _data.length,
+                        itemCount: data.length,
                         itemBuilder: (BuildContext context, int index) {
-                          final itemData = _data[index];
+                          final itemData = data[index];
 
                           return Column(
                             children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.yellow,
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).pop({
+                                    'code': itemData['data']['code'].toString(),
+                                    'name': itemData['data']['name'].toString()
+                                  });
+                                },
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.yellow,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 15,
+                                            left: 15,
+                                            top: 5,
+                                            bottom: 5),
+                                        child: Text(
+                                            itemData['data']['code'].toString(),
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 18),),
+                                      ),
                                     ),
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          right: 15, left: 15, top: 5, bottom: 5),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10),
                                       child: Text(
-                                        itemData['data']['code'].toString(),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w700,
+                                        itemData['data']['name'].toString(),
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
                                             fontSize: 18),
                                       ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10),
-                                    child: Text(
-                                      itemData['data']['name'].toString(),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600, fontSize: 18),
-                                    ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                               const SizedBox(
                                 height: 10,
@@ -112,7 +122,7 @@ class _FindCityWidgetState extends State<FindCityWidget> {
                       );
                     }
 
-                    return Text('Error Getting Response');
+                    return const Text('Error Getting Response');
                   },
                 ),
               ),

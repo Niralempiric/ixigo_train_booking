@@ -153,6 +153,8 @@ class ApiClient {
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
+
+
       throw Exception(
           'Failed to send POST request. Status code: ${response.statusCode}');
     }
@@ -167,8 +169,7 @@ class ApiClient {
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
-      throw Exception(
-          'Failed to load data. Status code: ${response.statusCode}');
+      throw Exception('Failed to load data. Status code: ${response.statusCode}');
     }
   }
 
